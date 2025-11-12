@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.11.0.816227636024">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.11.0.816284622761">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 3.11.0">
@@ -32,12 +32,12 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../../resources/css/retype.css?v=3.11.0.816227636024" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=3.11.0.816284622761" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=3.11.0.816227636024" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.11.0.816284622761" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=3.11.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.11.0.816227636024" data-turbo-eval="false" defer></script>
-    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.11.0.816227636024" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.11.0.816284622761" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.11.0.816284622761" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -186,12 +186,10 @@
 
 <p>Docker is a piece of software that allows you to virtualize applications into containers, so that you don&#x27;t have to deal with dependency
 management, and can carry around a solution that&#x27;s easily deployable anywhere you go.</p>
-<p>It is especially useful in this case, as we will deploy an entire automation stack from a single config file! Docker is also a premier choice for home lab/server uses, but can be used on a desktop PC as well.</p>
-<p>The basic idea is that we will create a single &quot;compose&quot; file that tells the Docker engine what containers we want to download, and what configuration options we want to set for each one. A sample compose file is presented later in this guide, but we recommend reading through it, as you will need to change parts of it to match your setup. Take special note of <code v-pre>environment</code> variables, as those are essentially your settings options, and will be important in later steps. Some pages linked in this guide also contain instructions for using <code v-pre>docker run</code> commands, but we do not recommend this as it is more difficult to maintain.</p>
-<p>This guide will cover how to setup a Docker stack for common media automation programs, namely: a torrent client, a usenet client, a
-VPN with a killswitch, Sonarr, Radarr, Autobrr, and Jackett. While we&#x27;ve opted for Jackett here, you could also switch it out for Prowlarr if you&#x27;d
-prefer something more flexible. It&#x27;s compose file is very similar to Radarr/Sonarr. These applications work together to automatically download files from chosen indexers, based on user-defined filters.</p>
-<p>We are primarily focused on basic setup and deployment of these applications. For information and help with configuring and using them, please check the relevant documentation, or ask in #questions. We will cover some basic usecases but your needs will vary depending on what indexers you have access to. Our goal here is to get you acquainted with Docker Compose, and give you a good jumping off point.</p>
+<p>It is especially useful in this case, as we will deploy an entire automation stack from a single config file!</p>
+<p>The basic idea is that we will create a single &quot;compose&quot; file that tells the Docker engine what containers we want to download, and what configuration options we want to set for each one. A sample compose file is presented later in this guide, but we recommend reading through it, as you will need to change parts of it to match your setup. Take special note of <code v-pre>environment</code> variables, as those are essentially your settings options.</p>
+<p>This guide will cover how to setup a Docker stack for common media automation programs, namely: a torrent client, a usenet client, a VPN with a killswitch, Sonarr, Radarr, Autobrr, and Prowlarr. These applications work together to automatically download files from chosen indexers, based on user-defined filters.</p>
+<p>This guide is primarily focused on basic setup and deployment of these applications. For information and help with configuring and using them, please check the relevant documentation, or ask in #questions. We will cover some basic usecases but your needs will vary depending on what indexers you have access to. Our goal here is to get you acquainted with Docker Compose, and give you a good jumping off point.</p>
 <doc-anchor-target id="installing-docker">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#installing-docker">#</doc-anchor-trigger>
@@ -216,8 +214,9 @@ Depending on how you&#x27;ve installed and configured Docker, you may need to ap
         <span>Preparing the VPN</span>
     </h2>
 </doc-anchor-target>
-<p>For maximum privacy and security we&#x27;ll be tunnelling our usenet and torrent clients through a VPN. Radarr, Sonarr and Jackett however won&#x27;t go through that, as some trackers and indexers might not like it if you send requests from a random non-whitelisted IP. This guide reccomends Gluetun, but the process is similar for other VPN container options.</p>
-<p>What we need is a configuration file, obtained from your chosen VPN provider. Wireguard is preferable and recommended, but OpenVPN is technically an option as well. This configuration file contains the info needed to allow Gluetun, (or your VPN client of choice,) to connect to your VPN provider&#x27;s servers. The process for getting a config file varies based on your provider, so we recommend searching for it online, or your provider&#x27;s website. <a href="https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers">This page</a> also contains per-provider instructions for getting a config file, as well as some other configuration that we will cover shortly. If possible, make sure to enable forwarding of one or more ports for use with torrent and usenet clients.</p>
+<p>For maximum privacy and security we&#x27;ll be tunnelling our usenet and torrent clients through a VPN. Radarr, Sonarr and Prowlarr however won&#x27;t go through that, as some trackers and indexers might not like it if you send requests from a random non-whitelisted IP. This guide reccomends Gluetun, but the process is similar for other VPN container options.</p>
+<p>What we need is a configuration file, obtained from your chosen VPN provider. Wireguard is preferable and recommended over OpenVPN. This configuration file contains the info needed to allow Gluetun, (or your VPN client of choice,) to connect to your VPN provider&#x27;s servers.</p>
+<p>The process for getting a config file varies based on your provider, so we recommend searching for it online, or your provider&#x27;s website. <a href="https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers">This page</a> also contains per-provider instructions for getting a config file, as well as some other configuration that we will cover shortly. If possible, make sure to enable forwarding of one or more ports for use with torrent and usenet clients.</p>
 <doc-anchor-target id="deploying-everything-using-docker-compose">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#deploying-everything-using-docker-compose">#</doc-anchor-trigger>
@@ -300,7 +299,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/London
+      - TZ=Europe/London # Change this based on your timezone
     depends_on:
       - gluetun
     volumes:
@@ -333,7 +332,7 @@ services:
     image: ghcr.io/autobrr/autobrr:latest
     user: 1000:1000
     environment:
-      - TZ=${TZ}
+      - TZ=${TZ} # Change this based on your timezone
     depends_on:
       - gluetun
     volumes:
@@ -348,7 +347,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/London
+      - TZ=Europe/London # Change this based on your timezone
     ports:
       - 8989:8989
     volumes:
@@ -363,7 +362,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/London
+      - TZ=Europe/London # Change this based on your timezone
     ports:
       - 7878:7878
     volumes:
@@ -374,19 +373,17 @@ services:
     networks:
       - guide
     restart: unless-stopped
-  jackett:
-    image: lscr.io/linuxserver/jackett:latest
-    container_name: jackett
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=Europe/London
-      - AUTO_UPDATE=true # Optional
-      - RUN_OPTS= # Optional
+      - TZ=Europe/London # Change this based on your timezone
     ports:
-      - 9117:9117
+      - 9696:9696
     volumes:
-      - './jackett:/config'
+      - './prowlarr:/config'
       - '/home/user/data:/data'
     networks:
       - guide
@@ -451,16 +448,17 @@ network interface, and to optionally bind your connections to the VPN IP. If usi
         <span>Adding your clients to Sonarr and Radarr</span>
     </h2>
 </doc-anchor-target>
-<p>Begin by pulling up Sonarr and Radarr in your browser as discussed in the previous step. We are going to give them the information needed to begin automation!</p>
-<p>Go to settings, navigate to download clients, and pick whatever clients you use (SABnzbd, Transmission, qBitorrent, Deluge, etc.) Follow on-screen instructions as necessary. If unclear, the clients recommended and configured in this guide are qBittorrent and SABnzbd. You will also want to configure your indexers here if adding them directly. If using Jackett (or Prowlarr) you will need to configure those first, and then come back to add them.</p>
-<doc-anchor-target id="jackett-and-autobrr">
+<p>Begin by pulling up Sonarr and Radarr in your browser as discussed in the previous step. We are going to give them the information needed to start automation!</p>
+<p>Go to settings, navigate to download clients, and pick whatever clients you use (SABnzbd, Transmission, qBitorrent, Deluge, etc.) Follow on-screen instructions as necessary. If unclear, the clients recommended and configured in this guide are qBittorrent and SABnzbd. You will also want to configure your indexers here if adding them directly. If using Prowlarr you will need to configure those first, and then come back to add them.</p>
+<doc-anchor-target id="prowlarr-and-autobrr">
     <h2>
-        <doc-anchor-trigger class="header-anchor-trigger" to="#jackett-and-autobrr">#</doc-anchor-trigger>
-        <span>Jackett and Autobrr</span>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#prowlarr-and-autobrr">#</doc-anchor-trigger>
+        <span>Prowlarr and Autobrr</span>
     </h2>
 </doc-anchor-target>
-<p>These programs sit in-between Sonarr/Radarr and your indexers, and take the burden of API engagement away from them. They take requests for content from Sonarr/Radarr and translate them into API calls for specific files. Autobrr can be used to automatically download files announced over irc, and Jackett should be used for more specific searches. For example, let&#x27;s say you wanted to download <code v-pre>Minions</code>. You&#x27;d add the title to Sonarr, Sonarr asks Jackett for the file, Jackett looks through your indexers and returns download options, Sonarr picks one, and sends it to your usenet or torrent client for download.</p>
-<p>As with before, configuration is done through the Web UI. Add your indexers as instructed on-screen, and add Jackett or Autobrr to your download clients or Sonarr/Radarr.</p>
+<p>These programs sit in-between Sonarr/Radarr and your indexers, and take the burden of API engagement away from them. They take requests for content from Sonarr/Radarr and translate them into API calls for specific files. Autobrr can be used to automatically download files announced over irc, and Prowlarr should be used for more specific searches.</p>
+<p>For example, let&#x27;s say you wanted to download <code v-pre>Minions</code>. You&#x27;d add the title to Sonarr, Sonarr asks Prowlarr for the file, Prowlarr looks through your indexers and returns download options, Sonarr picks one, and sends it to your usenet or torrent client for download.</p>
+<p>As with before, configuration is done through the Web UI. Add your indexers as instructed on-screen, and add Prowlarr or Autobrr to your download clients or Sonarr/Radarr.</p>
 <doc-anchor-target id="finishing-touches">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#finishing-touches">#</doc-anchor-trigger>
