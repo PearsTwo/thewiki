@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.11.0.816284622761">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.11.0.816284916048">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 3.11.0">
@@ -32,12 +32,12 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../../resources/css/retype.css?v=3.11.0.816284622761" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=3.11.0.816284916048" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=3.11.0.816284622761" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.11.0.816284916048" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=3.11.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.11.0.816284622761" data-turbo-eval="false" defer></script>
-    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.11.0.816284622761" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.11.0.816284916048" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.11.0.816284916048" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -405,7 +405,8 @@ in a detached mode, but since it&#x27;s your first time running them, Docker wil
 </doc-anchor-target>
 <p>The information below is left only as a resource for users deviating from this guide and using a Wireguard container for their vpn. Gluetun contains killswitch functionality out of the box and should not require any manual intervention.</p>
 <p>DO NOT FOLLOW THESE SETTINGS IF YOU ARE USING GLUETUN AS ADVISED!</p>
-<p>If using a Wireguard container instead of Gluetun, a killswitch will not yet be implemented. That&#x27;s where this bit comes in.</p>
+<doc-panel id="if-using-a-wireguard-container-instead-of-gluetun-a-killswitch-will-not-yet-be-implemented-thats-where-this-bit-comes-in" collapsed>
+    <template #title>If using a Wireguard container instead of Gluetun, a killswitch will not yet be implemented. That&#x27;s where this bit comes in.</template>
 <div class="codeblock-wrapper"><doc-codeblock>
 <pre translate="no" class="language-bash"><code v-pre class="language-bash">PostUp = DROUTE=$(ip route | grep default | awk '{print $3}'); HOMENET=192.168.1.0/24; HOMENET2=10.0.0.0/8; HOMENET3=172.16.0.0/12; ip route add $HOMENET3 via $DROUTE; ip route add $HOMENET2 via $DROUTE; ip route add $HOMENET via $DROUTE; iptables -I OUTPUT -d $HOMENET -j ACCEPT; iptables -A OUTPUT -d $HOMENET2 -j ACCEPT; iptables -A OUTPUT -d $HOMENET3 -j ACCEPT; iptables -A OUTPUT ! -o %i -m mark ! --mark $(wg show %i fwmark) -m addrtype ! --dst-type LOCAL -j REJECT
 PreDown = HOMENET=192.168.1.0/24; HOMENET2=10.0.0.0/8; HOMENET3=172.16.0.0/12; ip route del $HOMENET3 via $DROUTE; ip route del $HOMENET2 via $DROUTE; ip route del $HOMENET via $DROUTE; iptables -D OUTPUT ! -o %i -m mark ! --mark $(wg show %i fwmark) -m addrtype ! --dst-type LOCAL -j REJECT; iptables -D OUTPUT -d $HOMENET -j ACCEPT; iptables -D OUTPUT -d $HOMENET2 -j ACCEPT; iptables -D OUTPUT -d $HOMENET3 -j ACCEPT</code></pre>
@@ -431,6 +432,7 @@ AllowedIPs = 0.0.0.0/0, ::/0
 PersistentKeepalive = 15</code></pre>
 </doc-codeblock></div>
 <p>Once you&#x27;ve done that run <code v-pre>docker compose up -d</code> once more and you&#x27;re all ready to go.</p>
+</doc-panel>
 <p>Note that if you use qBittorrent and its web UI you can optionally bind all connections to the VPN network inteface. This can be done by
 going to settings and navigating to the advanced tab all the way on the right. You should immediately see the options to bind your connections to a
 network interface, and to optionally bind your connections to the VPN IP. If using Gluetun, this should show up as <code v-pre>tun0</code>.</p>
