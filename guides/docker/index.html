@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.11.0.816212426380">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.11.0.816227385837">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 3.11.0">
@@ -32,12 +32,12 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../../resources/css/retype.css?v=3.11.0.816212426380" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=3.11.0.816227385837" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=3.11.0.816212426380" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.11.0.816227385837" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=3.11.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.11.0.816212426380" data-turbo-eval="false" defer></script>
-    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.11.0.816212426380" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.11.0.816227385837" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.11.0.816227385837" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -187,10 +187,11 @@
 <p>Docker is a piece of software that allows you to virtualize applications into containers, so that you don&#x27;t have to deal with dependency
 management, and can carry around a solution that&#x27;s easily deployable anywhere you go.</p>
 <p>It is especially useful in this case, as we will deploy an entire automation stack from a single config file! Docker is also a premier choice for home lab/server uses, but can be used on a desktop PC as well.</p>
-<p>This guide will cover how to setup a Docker stack for common media automation programs, namely: a torrent client, a usenet client, a
-VPN with a killswitch, Sonarr, Radarr, and Jackett. While we&#x27;ve opted for Jackett here, you could also switch it out for Prowlarr if you&#x27;d
-prefer something more flexible. It&#x27;s compose file is very similar to Radarr/Sonarr.</p>
 <p>The basic idea is that we will create a single &quot;compose&quot; file that tells the Docker engine what containers we want to download, and what configuration options we want to set for each one. A sample compose file is presented later in this guide, but we recommend reading through it, as you will need to change parts of it to match your setup. Take special note of <code v-pre>environment</code> variables, as those are essentially your settings options, and will be important in later steps. Some pages linked in this guide also contain instructions for using <code v-pre>docker run</code> commands, but we do not recommend this as it is more difficult to maintain.</p>
+<p>This guide will cover how to setup a Docker stack for common media automation programs, namely: a torrent client, a usenet client, a
+VPN with a killswitch, Sonarr, Radarr, Autobrr, and Jackett. While we&#x27;ve opted for Jackett here, you could also switch it out for Prowlarr if you&#x27;d
+prefer something more flexible. It&#x27;s compose file is very similar to Radarr/Sonarr. These applications work together to automatically download files from chosen indexers, based on user-defined filters.</p>
+<p>We are primarily focused on basic setup and deployment of these applications. For information and help with configuring and using them, please check the relevant documentation, or ask in #questions. We will cover some basic usecases but your needs will vary depending on what indexers you have access to. Our goal here is to get you acquainted with Docker Compose, and give you a good jumping off point.</p>
 <doc-anchor-target id="installing-docker">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#installing-docker">#</doc-anchor-trigger>
@@ -223,7 +224,7 @@ Depending on how you&#x27;ve installed and configured Docker, you may need to ap
         <span>Deploying everything using <code v-pre>docker compose</code></span>
     </h2>
 </doc-anchor-target>
-<p>Now that we&#x27;ve gotten everything ready we can finally set up the stack. Paste the following into a file called <code v-pre>compose.yaml</code>. We&#x27;d recommend this file being a directory that is purely for this Docker stack, such as <code v-pre>/home/user/projects/automation/</code>. As a note, you will need to be working from inside this directory when running <code v-pre>docker compose</code> commands.</p>
+<p>Now that we&#x27;ve gotten everything ready we can finally set up the stack. Paste the following into a file called <code v-pre>compose.yaml</code>. We&#x27;d recommend this file being a directory that is purely for this Docker stack, such as <code v-pre>/home/user/projects/automation/</code>. As a note, you will need to be working from inside this directory when running <code v-pre>docker compose</code> commands. Please take the time to read the notes included in this file, as they have further instructions and will need to be completed for everything to function.</p>
 <p>We would also recommend sorting your media-related folders in the following way for ease of use:</p>
 <ul>
 <li><code v-pre>/home/user/data/torrents/</code> - where you torrent client will save files.</li>
@@ -249,8 +250,8 @@ sometimes do this if they&#x27;d like both a 4K and an HD version of a piece of 
 # See (https://docs.docker.com/engine/storage/) for more information on giving your containers access to storage locations.
 # Generally, the structure follows a `/path/to/your/data:/path/your/container/sees` structure, where the path after the colon is how the folders you add will appear from the perspective of your container.
 #
-# Following the recommend directory structure from before, we've already filled out the volume mount settings, so that every service will have it's
-# own directory for it's compose files, all in the form of `/home/user/projects/automation/&lt;service name&gt;`.
+# Following the recommend directory structure from before, we've already filled out the volume mount settings, so that every service will have its
+# own directory for its compose files, all in the form of `/home/user/projects/automation/&lt;service name&gt;`.
 #
 # This can of course be changed if you're experienced with Docker and would prefer to use custom mount locations.
 #
@@ -264,8 +265,9 @@ sometimes do this if they&#x27;d like both a 4K and an HD version of a piece of 
 # for Docker, you can check this Wikipedia article (https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) and get the information
 # from the &quot;TZ identifier&quot; column
 #
-# 4. Gluetun environment variables and setup instructions for each provider can be found at 
-# (https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers)
+# 4. Gluetun and VPN providers
+#
+# environment variables and setup instructions for each provider can be found at (https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers)
 # To help with readability, settings have been filled out to roughly match a configuration for ProtonVPN.
 
 ---
@@ -274,10 +276,10 @@ services:
   gluetun:
     container_name: gluetun
     image: qmcgaw/gluetun:latest
-    environment: # You will need to edit these settings based on the instructions listed for your provider. See above.
+    environment: # You will need to edit these settings based on the instructions listed for your provider. See above. Fields not needed for your provider can be removed.
       - VPN_SERVICE_PROVIDER= # Left blank intentionally. Put your provider here!
       - VPN_TYPE=wireguard # Do not change this unless you want to use OpenVPN
-      - WIREGUARD_PRIVATE_KEY= # See instructions for how to find this!
+      - WIREGUARD_PRIVATE_KEY= # See 4. Gluetun for how to find this!
       - WIREGUARD_ADDRESS= # Same as above!
       - VPN_PORT_FORWARDING=on # This is mostly only useful for ProtonVPN
       - VPN_FORWARD_ONLY=on # Same as above!
@@ -287,9 +289,11 @@ services:
       - NET_BIND_SERVICE
       - NET_RAW
     ports: # Anything using your VPN will need its ports added here to be reachable. 
-      - 8123:8123 # Qbittorrent WebUI
+      - 8123:8123 # qBittorrent WebUI
       - 8080:8080 # SABnzbd UI
       - 7474:7474 # Autobrr
+    networks: 
+      - guide
   sabnzbd:
     container_name: sabnzbd
     image: lscr.io/linuxserver/sabnzbd:latest
@@ -298,7 +302,7 @@ services:
       - PGID=1000
       - TZ=Europe/London
     depends_on:
-      - wireguard
+      - gluetun
     volumes:
       - './sabnzbd:/config'
       - '/home/user/data:/data'
@@ -322,6 +326,8 @@ services:
     volumes:
       - ./qbittorrent:/config
       - /home/user/data:/data
+    networks:
+      - guide
   autobrr:
     container_name: autobrr
     image: ghcr.io/autobrr/autobrr:latest
@@ -334,6 +340,8 @@ services:
       - './autobrr:/config'
     network_mode: container:gluetun
     restart: unless-stopped
+    networks:
+      - guide
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
@@ -426,27 +434,41 @@ AllowedIPs = 0.0.0.0/0, ::/0
 PersistentKeepalive = 15</code></pre>
 </doc-codeblock></div>
 <p>Once you&#x27;ve done that run <code v-pre>docker compose up -d</code> once more and you&#x27;re all ready to go.</p>
-<p>Note that if you use qBittorrent and its web UI you can optionally bind all connections to the Wireguard network inteface. This can be done by
+<p>Note that if you use qBittorrent and its web UI you can optionally bind all connections to the VPN network inteface. This can be done by
 going to settings and navigating to the advanced tab all the way on the right. You should immediately see the options to bind your connections to a
 network interface, and to optionally bind your connections to the VPN IP. If using Gluetun, this should show up as <code v-pre>tun0</code>.</p>
+<doc-anchor-target id="accessing-your-containers">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#accessing-your-containers">#</doc-anchor-trigger>
+        <span>Accessing your containers</span>
+    </h2>
+</doc-anchor-target>
+<p>Once everything is up and running, you should be able to access the Web UIs of your various Docker containers. Do so by opening a web browser and navigating to <code v-pre>http://ip:port</code>. For accessing a container on the same machine that&#x27;s hosting it, <code v-pre>http://localhost:port</code> or <code v-pre>https://localhost:port</code> can be used. The <code v-pre>ip</code> field refers to the local machine ip (not your network&#x27;s public ip) which can be found by running <code v-pre>ipconfig</code> on Windows and <code v-pre>ifconfig</code> or <code v-pre>ip address</code> on Linux. The <code v-pre>port</code> field is the port your container is configured to broadcast on, which is defined in <code v-pre>compose.yaml</code>. For example, qBittorrent will be at <code v-pre>http://localhost:8123</code> based on the file provided in this guide.</p>
+<p>Most setup from this point on will be done through the relevant Web UIs.</p>
 <doc-anchor-target id="adding-your-clients-to-sonarr-and-radarr">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#adding-your-clients-to-sonarr-and-radarr">#</doc-anchor-trigger>
         <span>Adding your clients to Sonarr and Radarr</span>
     </h2>
 </doc-anchor-target>
-<p>This can be done by going to settings, navigating to download clients and picking whatever clients you use (SABnzbd, Transmission, qBitorrent,
-Deluge, etc.)</p>
-<p>For the hostname it would be your local network address, which you can <a href="https://www.whatismybrowser.com/detect/what-is-my-local-ip-address">find like so on Windows</a> and <a href="https://www.ionos.com/digitalguide/hosting/technical-matters/get-linux-ip-address/">like so on Linux</a>.</p>
-<p>The port would just be whatever was on the left hand side of the <code v-pre>port</code> declarations in the Compose file.</p>
+<p>Begin by pulling up Sonarr and Radarr in your browser as discussed in the previous step. We are going to give them the information needed to begin automation!</p>
+<p>Go to settings, navigate to download clients, and pick whatever clients you use (SABnzbd, Transmission, qBitorrent, Deluge, etc.) Follow on-screen instructions as necessary. If unclear, the clients recommended and configured in this guide are qBittorrent and SABnzbd. You will also want to configure your indexers here if adding them directly. If using Jackett (or Prowlarr) you will need to configure those first, and then come back to add them.</p>
+<doc-anchor-target id="jackett-and-autobrr">
+    <h2>
+        <doc-anchor-trigger class="header-anchor-trigger" to="#jackett-and-autobrr">#</doc-anchor-trigger>
+        <span>Jackett and Autobrr</span>
+    </h2>
+</doc-anchor-target>
+<p>These programs sit in-between Sonarr/Radarr and your indexers, and take the burden of API engagement away from them. They take requests for content from Sonarr/Radarr and translate them into API calls for specific files. Autobrr can be used to automatically download files announced over irc, and Jackett should be used for more specific searches. For example, let&#x27;s say you wanted to download <code v-pre>Minions</code>. You&#x27;d add the title to Sonarr, Sonarr asks Jackett for the file, Jackett looks through your indexers and returns download options, Sonarr picks one, and sends it to your usenet or torrent client for download.</p>
+<p>As with before, configuration is done through the Web UI. Add your indexers as instructed on-screen, and add Jackett or Autobrr to your download clients or Sonarr/Radarr.</p>
 <doc-anchor-target id="finishing-touches">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#finishing-touches">#</doc-anchor-trigger>
-        <span>Finishing touches</span>
+        <span>Finishing Touches</span>
     </h2>
 </doc-anchor-target>
 <p>As stated previously in this guide, we highly recommend familiarizing yourself further with Docker and its commands. The purpose of this guide is to get you up and running as fast as possible, while minimizing areas of confusion. Docker, and Docker Compose, are very powerful, and can be used to run an entire home media setup. There are several sections in this guide that require user input, so make sure to check those first if you are having trouble!</p>
-<p>The <code v-pre>compose.yaml</code> file provided will create seven total containers, and all of these have their own documentation pages available online. You should not have to visit these, but it is worth keeping them bookmarked in case of future issues. Searching for the <code v-pre>image</code> name listed is usually the most direct way to locate them if needed. Questions or support requests for this guide should be directed to the #questions channel in Snackbox.</p>
+<p>The <code v-pre>compose.yaml</code> file provided will create seven total containers, and all of these have their own documentation pages available online; it is worth keeping them bookmarked in case of future issues. Searching for the <code v-pre>image</code> name listed is usually the most direct way to locate them if needed. Questions or support requests for this guide should be directed to the #questions channel in Snackbox.</p>
 
                                 
                                 <!-- Required only on API pages -->
