@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.11.0.816324939092">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.11.0.816326827013">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 3.11.0">
@@ -32,12 +32,12 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../../resources/css/retype.css?v=3.11.0.816324939092" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=3.11.0.816326827013" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=3.11.0.816324939092" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.11.0.816326827013" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=3.11.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.11.0.816324939092" data-turbo-eval="false" defer></script>
-    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.11.0.816324939092" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.11.0.816326827013" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.11.0.816326827013" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -184,11 +184,27 @@
     </div>
 </div>
 
-<p>Docker is a piece of software that allows containerize applications, avoiding dependency managment and installation time, and can carry around a solution that&#x27;s easily deployable anywhere you go.</p>
-<p>In this tutorial we will deploy a whole automation stack from a single configuration file.</p>
+<p>Docker is a piece of software that allows containerizing applications, avoiding dependency managment, reduicing installation time, and portability.</p>
+<p>In this tutorial we will deploy a whole automation stack from a single configuration file!</p>
 <p>The basic idea is that we will create a single &quot;compose&quot; file that tells the Docker engine what containers we want to download, and what configuration options we want to set for each one. A sample compose file is presented later in this guide, but we recommend reading through it, as you will need to change parts of it to match your setup. Take special note of <code v-pre>environment</code> variables, as those are essentially your settings options.</p>
 <p>This guide will cover how to setup a Docker stack for common media automation programs, namely: a torrent client, a usenet client, a VPN with a killswitch, Sonarr, Radarr, Autobrr, and Prowlarr. These applications work together to automatically download files from chosen indexers, based on user-defined filters.</p>
-<p>This guide is primarily focused on basic setup and deployment of these applications. For information and help with configuring and using them, please check the relevant documentation, or ask in #questions on Discord. We will cover some basic usecases but your needs will vary depending on what indexers you have access to. Our goal here is to get you acquainted with Docker Compose, and give you a good jumping off point.</p>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-primary"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-callout-primary" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+<p>This guide is primarily focused on basic setup and deployment of these applications. For information and help with configuring and using them, please check the relevant documentation, or ask in #questions on Discord. We will cover some basic use cases but your needs will vary depending on what indexers you have access to. Our goal here is to get you acquainted with Docker Compose, and give you a good jumping off point.</p>
+        </div>
+    </div>
+</div>
 <doc-anchor-target id="installing-docker">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#installing-docker">#</doc-anchor-trigger>
@@ -270,7 +286,7 @@ services:
       - WIREGUARD_ADDRESS= # Same as above!
       - VPN_PORT_FORWARDING=on # This is mostly only useful for ProtonVPN
       - VPN_FORWARD_ONLY=on # Same as above!
-      - VPN_PORT_FORWARDING_UP_COMMAND= # This can be useful to dynamically update your forwarded port in other programs if it isn't static.
+      - VPN_PORT_FORWARDING_UP_COMMAND=/bin/sh -c 'wget -O- --retry-connrefused --post-data &quot;json={\&quot;listen_port\&quot;:}&quot; http://127.0.0.1:8123/api/v2/app/setPreferences 2&gt;&amp;1' #This example up command will update qBittorrent with your forwarded port automatically. See 4. Gluetun for more information.
     cap_add:
       - NET_ADMIN
       - NET_BIND_SERVICE
@@ -278,7 +294,6 @@ services:
     ports: # Anything using your VPN will need its ports added here to be reachable. 
       - 8123:8123 # qBittorrent WebUI
       - 8080:8080 # SABnzbd UI
-      - 7474:7474 # Autobrr
   sabnzbd:
     container_name: sabnzbd
     image: lscr.io/linuxserver/sabnzbd:latest
@@ -307,19 +322,16 @@ services:
       - gluetun
     restart: unless-stopped
     volumes:
-      - ./qbittorrent:/config
-      - /home/user/data:/data
+      - './qbittorrent:/config'
+      - '/home/user/data:/data'
   autobrr:
     container_name: autobrr
     image: ghcr.io/autobrr/autobrr:latest
     user: 1000:1000
     environment:
       - TZ=${TZ} # Change this based on your timezone
-    depends_on:
-      - gluetun
     volumes:
       - './autobrr:/config'
-    network_mode: container:gluetun
     restart: unless-stopped
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -380,7 +392,39 @@ sometimes do this if they&#x27;d like both a 4K and an HD version of a piece of 
 in a <code v-pre>-d</code>etached mode, but since it&#x27;s your first time running them, Docker will pull the images for each of these containers. Any <code v-pre>docker compose</code> command must be run within the folder that contains <code v-pre>compose.yaml</code>.</p>
 <p>Another useful command is <code v-pre>docker compose down</code>, which will shut down each of the containers.</p>
 <p>By running in detached mode, we also block any terminal output from our containers. Some of these outputs contain vital information for setting up your container the first time, specifically the output from Qbittorrent. To view the console output, you can run <code v-pre>docker logs &lt;name of container&gt;</code>, for example <code v-pre>docker logs qbittorrent</code>.</p>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-primary"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-callout-primary" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
 <p>We recommend looking at the <code v-pre>man</code> page or official documentation for Docker to familiarize yourself with available commands. <code v-pre>docker pull</code>, <code v-pre>docker ps</code>, and <code v-pre>docker system prune</code> can be useful, for example. See documentation for info on what these do!</p>
+        </div>
+    </div>
+</div>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-warning"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-callout-warning" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M22.48 15.59L14.01 1.45A2.968 2.968 0 0012.16.09c-.78-.19-1.58-.07-2.27.35-.41.25-.76.6-1.01 1.01v.01L.4 15.6c-.83 1.43-.33 3.27 1.1 4.1.45.26.95.4 1.48.4h16.95c.8-.01 1.55-.33 2.11-.9.56-.57.87-1.33.86-2.13a3.04 3.04 0 00-.42-1.48zm-1.87 2.21c-.19.19-.44.3-.69.3H2.99c-.17 0-.34-.05-.49-.13a.992.992 0 01-.37-1.35L10.6 2.48c.08-.14.2-.25.34-.33a.992.992 0 011.37.33l8.46 14.13c.09.15.13.32.13.49 0 .26-.1.51-.29.7z"></path>
+                    <path d="M11.45 12.1c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1s-1 .45-1 1v4c0 .56.45 1 1 1zM11.46 14.1c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+<p>The default password for qBittorrent will be located in its console output/logs. See above.</p>
+        </div>
+    </div>
+</div>
 <doc-anchor-target id="setting-up-a-killswitch">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#setting-up-a-killswitch">#</doc-anchor-trigger>
@@ -388,7 +432,7 @@ in a <code v-pre>-d</code>etached mode, but since it&#x27;s your first time runn
     </h2>
 </doc-anchor-target>
 <p>The information below is left only as a resource for users deviating from this guide and using a Wireguard container for their vpn. Gluetun contains killswitch functionality out of the box and should not require any manual intervention.</p>
-<p>DO NOT FOLLOW THESE SETTINGS IF YOU ARE USING GLUETUN AS ADVISED!</p>
+<p>DO NOT IMPLEMENT THE FOLLOWING SETTINGS IF USING GLUETUN AS ADVISED!</p>
 <doc-panel id="if-using-a-wireguard-container-instead-of-gluetun-a-killswitch-will-not-yet-be-implemented-thats-where-this-bit-comes-in" collapsed>
     <template #title>If using a Wireguard container instead of Gluetun, a killswitch will not yet be implemented. That&#x27;s where this bit comes in.</template>
 <div class="codeblock-wrapper"><doc-codeblock>
@@ -426,7 +470,24 @@ network interface, and to optionally bind your connections to the VPN IP. If usi
         <span>Accessing your containers</span>
     </h2>
 </doc-anchor-target>
-<p>Once everything is up and running, you should be able to access the Web UIs of your various Docker containers. Do so by opening a web browser and navigating to <code v-pre>http://ip:port</code>. For accessing a container on the same machine that&#x27;s hosting it, <code v-pre>http://localhost:port</code> or <code v-pre>https://localhost:port</code> can be used. The <code v-pre>ip</code> field refers to the local machine ip (not your network&#x27;s public ip) which can be found by running <code v-pre>ipconfig</code> on Windows and <code v-pre>ifconfig</code> or <code v-pre>ip address</code> on Linux. The <code v-pre>port</code> field is the port your container is configured to broadcast on, which is defined in <code v-pre>compose.yaml</code>. For example, qBittorrent will be at <code v-pre>http://localhost:8123</code> based on the file provided in this guide.</p>
+<p>Once everything is up and running, you should be able to access the Web UIs of your various Docker containers. Do so by opening a web browser and navigating to <code v-pre>http://ip:port</code>. For accessing a container on the same machine that&#x27;s hosting it, <code v-pre>http://localhost:port</code> or <code v-pre>https://localhost:port</code> can be used. The <code v-pre>ip</code> field refers to the local machine ip (not your network&#x27;s public ip). The <code v-pre>port</code> field is the port your container is configured to broadcast on, which is defined in <code v-pre>compose.yaml</code>. For example, qBittorrent will be at <code v-pre>http://localhost:8123</code> based on the file provided in this guide.</p>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-primary"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-callout-primary" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+<p>A machine&#x27;s <code v-pre>ip</code> can be found by running <code v-pre>ipconfig</code> on Windows, and <code v-pre>ifconfig</code> or <code v-pre>ip address</code> on Linux</p>
+        </div>
+    </div>
+</div>
 <p>Most setup from this point on will be done through the relevant Web UIs.</p>
 <doc-anchor-target id="adding-your-clients-to-sonarr-and-radarr">
     <h2>
@@ -452,7 +513,24 @@ network interface, and to optionally bind your connections to the VPN IP. If usi
     </h2>
 </doc-anchor-target>
 <p>As stated previously in this guide, we highly recommend familiarizing yourself further with Docker and its commands. The purpose of this guide is to get you up and running as fast as possible, while minimizing areas of confusion. Docker, and Docker Compose, are very powerful, and can be used to run an entire home media setup. There are several sections in this guide that require user input, so make sure to check those first if you are having trouble!</p>
-<p>The <code v-pre>compose.yaml</code> file provided will create seven total containers, and all of these have their own documentation pages available online; it is worth keeping them bookmarked in case of future issues. Searching for the <code v-pre>image</code> name listed is usually the most direct way to locate them if needed. Questions or support requests for this guide should be directed to the #questions channel in Snackbox.</p>
+<p>The <code v-pre>compose.yaml</code> file provided will create seven total containers, and all of these have their own documentation pages available online; it is worth keeping them bookmarked in case of future issues. Searching for the <code v-pre>image</code> name listed is usually the most direct way to locate them if needed.</p>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-primary"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-callout-primary" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+<p>Questions or support requests for this guide should be directed to the #questions channel in Snackbox.</p>
+        </div>
+    </div>
+</div>
 
                                 
                                 <!-- Required only on API pages -->
