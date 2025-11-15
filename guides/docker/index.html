@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.11.0.816484357045">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.11.0.816485036141">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 3.11.0">
@@ -32,12 +32,12 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../../resources/css/retype.css?v=3.11.0.816484357045" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=3.11.0.816485036141" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=3.11.0.816484357045" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.11.0.816485036141" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=3.11.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.11.0.816484357045" data-turbo-eval="false" defer></script>
-    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.11.0.816484357045" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.11.0.816485036141" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.11.0.816485036141" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -187,7 +187,7 @@
 <p>Docker, simply, is a platform for running applications. It allows you to run apps packaged into <a href="https://www.docker.com/resources/what-container/">containers</a> and gives you the tools to quickly and easily deploy them, anywhere you want, efficiently and securely.</p>
 <p>In this tutorial we will deploy a whole automation stack from a single configuration file!</p>
 <p>The basic idea is that we will create a single &quot;compose&quot; file that tells the Docker engine what containers we want to download, and what configuration options we want to set for each one. A sample compose file is presented later in this guide, but we recommend reading through it, as you will need to change parts of it to match your setup. Take special note of <code v-pre>environment</code> variables, as those are essentially your settings options.</p>
-<p>This guide will cover how to setup a Docker stack for common media automation programs, namely: a torrent client, a Usenet client, a VPN, Sonarr, Radarr, and Prowlarr. These applications work together to automatically download files from chosen indexers, based on user-defined filters.</p>
+<p>This guide will cover how to setup a Docker stack for common media automation programs, namely: a torrent client, a VPN, Sonarr, Radarr, and Prowlarr. These applications work together to automatically download files from chosen indexers, based on user-defined filters.</p>
 <div class="flex mb-6">
     <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-primary"></div>
     <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
@@ -222,9 +222,9 @@ Depending on how you&#x27;ve installed and configured Docker, you may need to ap
         <span>Preparing the VPN</span>
     </h2>
 </doc-anchor-target>
-<p>For maximum privacy and security we&#x27;ll be tunneling our Usenet and torrent clients through a VPN. Radarr, Sonarr and Prowlarr however won&#x27;t go through it, as some trackers and indexers forbid this. This guide recommends Gluetun, but the process is similar for other VPN container options.</p>
+<p>For maximum privacy and security we&#x27;ll be tunneling our torrent client through a VPN. Radarr, Sonarr and Prowlarr however won&#x27;t go through it, as some trackers and indexers forbid this. This guide recommends Gluetun, but the process is similar for other VPN container options.</p>
 <p>What we need is a configuration file, usually <code v-pre>.conf</code>, obtained from your chosen VPN provider. Wireguard is preferable and recommended over OpenVPN. This configuration file contains the info needed to allow Gluetun, (or your VPN client of choice,) to connect to your VPN provider&#x27;s servers.</p>
-<p>The process for getting a config file varies based on your provider, so we recommend searching for it online, or your provider&#x27;s website. <a href="https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers">This page</a> also contains per-provider instructions for getting a config file, as well as some other configuration that we will cover shortly. If possible, make sure to enable forwarding of one or more ports for use with torrent and usenet clients.</p>
+<p>The process for getting a config file varies based on your provider, so we recommend searching for it online, or your provider&#x27;s website. <a href="https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers">This page</a> also contains per-provider instructions for getting a config file, as well as some other configuration that we will cover shortly. If possible, make sure to enable forwarding of one or more ports for use with torrent clients.</p>
 <doc-anchor-target id="deploying-everything-using-docker-compose">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#deploying-everything-using-docker-compose">#</doc-anchor-trigger>
@@ -292,25 +292,8 @@ services:
       - VPN_PORT_FORWARDING_UP_COMMAND=/bin/sh -c 'wget -O- --retry-connrefused --post-data &quot;json={\&quot;listen_port\&quot;:}&quot; http://127.0.0.1:8123/api/v2/app/setPreferences 2&gt;&amp;1' #This example up command will update qBittorrent with your forwarded port automatically. See 4. Gluetun for more information. Can also be removed if not using port forwarding.
     cap_add:
       - NET_ADMIN
-      - NET_BIND_SERVICE
-      - NET_RAW
     ports: # Anything using your VPN will need its ports added here to be reachable. 
       - 8123:8123 # qBittorrent WebUI
-      - 8080:8080 # SABnzbd UI
-  sabnzbd:
-    container_name: sabnzbd
-    image: lscr.io/linuxserver/sabnzbd:latest
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London # Change this based on your timezone
-    depends_on:
-      - gluetun
-    volumes:
-      - './sabnzbd:/config'
-      - '/home/user/data:/data'
-    network_mode: container:gluetun
-    restart: unless-stopped
   qbittorrent:
     container_name: qbittorrent
     image: linuxserver/qbittorrent:latest 
@@ -397,7 +380,6 @@ services:
       - NET_ADMIN
     ports: # Anything using your VPN will need its ports added here to be reachable. 
       - 8123:8123 # qBittorrent WebUI
-      - 8080:8080 # SABnzbd UI
 #
 # Mullvad complete example:
   
@@ -416,7 +398,6 @@ services:
       - NET_ADMIN
     ports: # Anything using your VPN will need its ports added here to be reachable. 
       - 8123:8123 # qBittorrent WebUI
-      - 8080:8080 # SABnzbd UI
 #
 # AirVPN complete example:
   gluetun:
@@ -434,14 +415,12 @@ services:
     cap_add:
       - NET_ADMIN
     ports: # Anything using your VPN will need its ports added here to be reachable. 
-      - 8123:8123 # qBittorrent WebUI
-      - 8080:8080 # SABnzbd UI</code></pre>
+      - 8123:8123 # qBittorrent WebUI</code></pre>
 </doc-codeblock></div>
 </doc-panel>
 <p>We would also recommend sorting your media-related folders in the following way for ease of use:</p>
 <ul>
 <li><code v-pre>/home/user/data/torrents/</code> - where you torrent client will save files.</li>
-<li><code v-pre>/home/user/data/usenet</code> - where your usenet client will save files.</li>
 <li><code v-pre>/home/user/data/media</code> - where your hardlinked files will reside, so that they can be read by your media server (Plex/Jellyfin/etc.)
 <ul>
 <li><code v-pre>/home/user/data/media/tv</code> - where Sonarr will hardlink files.</li>
@@ -494,8 +473,8 @@ sometimes do this if they&#x27;d like both a 4K and an HD version of a piece of 
         <span>VPN Safety</span>
     </h2>
 </doc-anchor-target>
-<p>Many VPN solutions require extra effort to make sure torrent and Usenet traffic doesn&#x27;t accidentally leak outside. The compose file given already confines your torrent and Usenet client to your VPN&#x27;s internal. Gluetun comes bundled with a killswitch, which will block traffic not routed through a VPN, so there should be no way for traffic to escape based on this setup.</p>
-<p>Note that if you use qBittorrent and its web UI, you can optionally bind all connections to the VPN network interface. This can be done by going to settings and navigating to the advanced tab all the way on the right. You should immediately see the options to bind your connections to a network interface, and to optionally bind your connections to the VPN IP. If using Gluetun, this should show up as <code v-pre>tun0</code>. This setting should not be necessary, but can provide peace of mind in the event user error causes multiple systems to fail.</p>
+<p>Many VPN solutions require extra effort to make sure torrent traffic doesn&#x27;t accidentally leak outside. The compose file given already confines your torrent client to your VPN&#x27;s internal. Gluetun comes bundled with a killswitch, which will block traffic not routed through a VPN, so there should be no way for traffic to escape based on this setup.</p>
+<p>Note that you can optionally bind all connections to the VPN network interface. This can be done by going to settings and navigating to the advanced tab all the way on the right. You should immediately see the options to bind your connections to a network interface, and to optionally bind your connections to the VPN IP. If using Gluetun, this should show up as <code v-pre>tun0</code>. This setting should not be necessary, but can provide peace of mind in the event user error causes multiple systems to fail.</p>
 <doc-anchor-target id="accessing-your-containers">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#accessing-your-containers">#</doc-anchor-trigger>
@@ -524,11 +503,11 @@ sometimes do this if they&#x27;d like both a 4K and an HD version of a piece of 
 <doc-anchor-target id="adding-your-clients-to-sonarr-and-radarr">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#adding-your-clients-to-sonarr-and-radarr">#</doc-anchor-trigger>
-        <span>Adding your clients to Sonarr and Radarr</span>
+        <span>Adding your client(s) to Sonarr and Radarr</span>
     </h2>
 </doc-anchor-target>
 <p>Begin by pulling up Sonarr and Radarr in your browser as discussed in the previous step. We are going to give them the information needed to start automation!</p>
-<p>Go to settings, navigate to download clients, and pick whatever clients you use (SABnzbd and qBittorrent.) Follow on-screen instructions as necessary. You will also want to configure your indexers here if adding them directly. If using Prowlarr you will need to configure those first, and then come back to add them.</p>
+<p>Go to settings, navigate to download clients, and pick whatever clients you use (qBittorrent.) Follow on-screen instructions as necessary. You will also want to configure your indexers here if adding them directly. If using Prowlarr you will need to configure those first, and then come back to add them.</p>
 <doc-anchor-target id="prowlarr">
     <h2>
         <doc-anchor-trigger class="header-anchor-trigger" to="#prowlarr">#</doc-anchor-trigger>
@@ -536,7 +515,7 @@ sometimes do this if they&#x27;d like both a 4K and an HD version of a piece of 
     </h2>
 </doc-anchor-target>
 <p>Prowlarr sits in-between Sonarr/Radarr and your indexers, and take the burden of API engagement away from them. It takes requests for content from Sonarr/Radarr and translates them into API calls for specific files.</p>
-<p>For example, let&#x27;s say you wanted to download a movie. You&#x27;d add the title to Sonarr, Sonarr asks Prowlarr for the file, Prowlarr looks through your indexers and returns download options, Sonarr picks one, and sends it to your usenet or torrent client for download.</p>
+<p>For example, let&#x27;s say you wanted to download a movie. You&#x27;d add the title to Sonarr, Sonarr asks Prowlarr for the file, Prowlarr looks through your indexers and returns download options, Sonarr picks one, and sends it to your torrent client for download.</p>
 <p>As with before, configuration is done through the Web UI. Add your indexers as instructed on-screen, and add Prowlarr to your download clients or Sonarr/Radarr.</p>
 <doc-anchor-target id="finishing-touches">
     <h2>
