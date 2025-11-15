@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.11.0.816485036141">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="3.11.0.816490047445">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 3.11.0">
@@ -32,12 +32,12 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../../resources/css/retype.css?v=3.11.0.816485036141" rel="stylesheet">
+    <link href="../../resources/css/retype.css?v=3.11.0.816490047445" rel="stylesheet">
 
-    <script data-cfasync="false" src="../../resources/js/config.js?v=3.11.0.816485036141" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../../resources/js/config.js?v=3.11.0.816490047445" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../../resources/js/retype.js?v=3.11.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.11.0.816485036141" data-turbo-eval="false" defer></script>
-    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.11.0.816485036141" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../../resources/js/lunr.js?v=3.11.0.816490047445" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../../resources/js/prism.js?v=3.11.0.816490047445" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -420,19 +420,35 @@ services:
 </doc-panel>
 <p>We would also recommend sorting your media-related folders in the following way for ease of use:</p>
 <ul>
-<li><code v-pre>/home/user/data/torrents/</code> - where you torrent client will save files.</li>
+<li><code v-pre>/home/user/data/torrents</code> - where you torrent client will save files.</li>
 <li><code v-pre>/home/user/data/media</code> - where your hardlinked files will reside, so that they can be read by your media server (Plex/Jellyfin/etc.)
 <ul>
 <li><code v-pre>/home/user/data/media/tv</code> - where Sonarr will hardlink files.</li>
 <li><code v-pre>/home/user/data/media/movies</code> - where Radarr will hardlink files.</li>
-<li>You can take this concept further and make more subfolders in <code v-pre>media</code> if you&#x27;d like to have one more than one Sonarr or Radarr instance. People
-sometimes do this if they&#x27;d like both a 4K and an HD version of a piece of media, as both the *arrs can only hardlink one version at a time.</li>
+<li>You can take this concept further and make more subfolders in <code v-pre>media</code> if you&#x27;d like to have one more than one Sonarr or Radarr instance. People sometimes do this if they&#x27;d like both a 4K and an HD version of a piece of media, as both the *arrs can only hardlink one version at a time.</li>
 </ul>
 </li>
 </ul>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-primary"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mb-px text-callout-primary" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+<p>The <code v-pre>/home/user/</code> portion of these file locations can be replaced with whatever folder structure you desire. For example, if using a second hard drive, you could use <code v-pre>/path/to/drive/</code> followed by the relevant subdirectories. We have filled out the compose file with <code v-pre>/home/user/</code> as convention, so this will need to be changed if you desire a different base directory for your media.</p>
+        </div>
+    </div>
+</div>
 <p>Paths for Docker are extremely important as configuring them incorrectly can break hardlinking and cause you to waste space!</p>
 <p>After all of that you&#x27;ll want to go into <code v-pre>/home/user/projects/automation</code> and run <code v-pre>docker compose up -d</code>.  This will deploy all of the containers in a <code v-pre>-d</code>etached mode, but since it&#x27;s your first time running them, Docker will pull the images for each of these containers. Any <code v-pre>docker compose</code> command must be run within the folder that contains <code v-pre>compose.yaml</code>.</p>
-<p>Another useful command is <code v-pre>docker compose down</code>, which will shut down each of the containers.</p>
+<p>Another useful command is <code v-pre>docker compose down</code>, which will shut down your containers.</p>
 <p>By running in detached mode, we also block any terminal output from our containers. Some of these outputs contain vital information for setting up your container the first time, specifically the output from qBittorrent. To view the console output, you can run <code v-pre>docker logs &lt;name of container&gt;</code>, for example <code v-pre>docker logs qBittorrent</code>.</p>
 <p>We recommend looking at the <code v-pre>man</code> page or official documentation for Docker to familiarize yourself with available commands. <code v-pre>docker pull</code>, <code v-pre>docker ps</code>, and <code v-pre>docker system prune</code> can be useful, for example. See documentation for info on what these do!</p>
 <div class="flex mb-6">
